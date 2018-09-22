@@ -1,6 +1,6 @@
 {
   "name": "@clevernature/benchmark-regression",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Generates performance regression tests using benchmarkjs.",
   "main": "dist/index.js",
   "scripts": {
@@ -12,7 +12,11 @@
   "engines": {
     "node": ">=6.1"
   },
-  "author": "Nowell Strite <nowell@strite.org>",
+  "author": {
+    "name": "Nowell Strite",
+    "email": "nowell@strite.org",
+    "url": "nowell.strite.org"
+  },
   "license": "MIT",
   "dependencies": {
     "benchmark": "^2.1.4",
@@ -27,7 +31,16 @@
     "@babel/preset-env": "^7.1.0",
     "eslint": "^5.6.0"
   },
+  "homepage": "https://github.com/nowells/benchmark-regression",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nowells/bencharm-regression.git"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "keywords": [
+    "benchmark",
+    "regression"
+  ]
 }

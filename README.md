@@ -1,6 +1,12 @@
-# `@clevernature/benchmark-regression`
+# Benchmark Regression
 
-Generates performance regression tests using benchmarkjs.
+Generates performance regression tests using [benchmarkjs](https://benchmarkjs.com/).
+
+## Install
+
+```
+npm install --save-dev @clevernature/benchmark-regression
+```
 
 ## Code
 
