@@ -1,11 +1,13 @@
 {
   "name": "@clevernature/benchmark-regression",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Generates performance regression tests using benchmarkjs.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "node test/index.js"
+    "build": "babel src -d dist",
+    "prepublish": "npm run build",
+    "test": "npm run build && node test/index.js"
   },
   "engines": {
     "node": ">=6.1"
@@ -16,11 +18,13 @@
     "benchmark": "^2.1.4",
     "chalk": "^2.4.1",
     "cli-table": "^0.3.1",
-    "listr": "^0.14.2",
     "lodash": "^4.17.11",
     "npm-install-tmp": "^0.1.5"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.0",
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
     "eslint": "^5.6.0"
   },
   "publishConfig": {
