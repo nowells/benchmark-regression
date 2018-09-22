@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const benchmark = require('benchmark');
 const chalk = require('chalk');
-const { use } = require('npm-install-tmp');
+const npmInstallPackage = require('./npm-install-package');
 const reportResults = require('./report');
 
 module.exports = createRegressionBenchmark;
@@ -136,7 +136,10 @@ function createRegressionBenchmark(baseModule, comparisonModules = []) {
 async function installTestModules(testModules) {
     for (const testModule of testModules) {
         if (typeof testModule.module === 'string') {
-            testModule.module = await use(testModule.module);
+            const {id, module} = await npmInstallPackage(testModule.module);
+
+            testModule.module = module;
+            testModule.id = id;
         }
     }
 }
