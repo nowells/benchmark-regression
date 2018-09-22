@@ -52,4 +52,4 @@ function setup(client) {
 
 ## Results
 
-![Benchmark Results](./assets/results.png)
+![Benchmark Results](https://github.com/nowells/benchmark-regression/raw/master/assets/results.png)
