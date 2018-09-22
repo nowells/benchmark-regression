@@ -2,7 +2,7 @@ const npm = require('npm');
 const libnpm = require('libnpm');
 const tempy = require('tempy');
 const _ = require('lodash');
-const {promisify} = require('util');
+const promisify = require('util.promisify');
 
 module.exports = installNpmPackage;
 
