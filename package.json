@@ -1,6 +1,6 @@
 {
   "name": "@clevernature/benchmark-regression",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Generates performance regression tests using benchmarkjs.",
   "main": "index.js",
   "scripts": {
@@ -22,5 +22,8 @@
   },
   "devDependencies": {
     "eslint": "^5.6.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }

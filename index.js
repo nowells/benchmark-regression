@@ -14,111 +14,123 @@ function createRegressionBenchmark(baseModule, comparisonModules = []) {
     const buckets = {};
     const results = {};
 
-    const api = {
-        add(name, fn, opts = {}) {
-            opts = Object.assign(
-                {},
-                {
-                    bucket: 'regression',
-                    setup: () => void 0,
-                    teardown: () => void 0,
-                },
-                opts,
-            );
-            _.defaults(buckets, { [opts.bucket]: {} });
+    async function run() {
+        console.log(chalk.green('\n# Benchmark Regression\n'));
+        console.log(chalk.magenta('## Installing baseline packages\n'));
 
-            const bucket = buckets[opts.bucket];
+        await installTestModules(testModules);
 
-            if (_.has(bucket, name)) {
-                throw new Error(`Bucket ${opts.bucket} already has benchmark ${name}.`);
-            }
+        console.log(chalk.magenta('## Starting benchmark suite\n'));
 
-            bucket[name] = { fn, opts };
+        console.log(chalk.yellow('### Progress:\n'));
 
-            return api;
-        },
-        async run() {
-            console.log(chalk.green('\n# Benchmark Regression\n'));
-            console.log(chalk.magenta('## Installing baseline packages\n'));
-
-            await installTestModules(testModules);
-
-            console.log(chalk.magenta('## Starting benchmark suite\n'));
-
-            console.log(chalk.yellow('### Progress:\n'));
-
-            for (const bucketName of Object.keys(buckets)) {
-                const bucket = buckets[bucketName];
+        for (const bucketName of Object.keys(buckets)) {
+            const bucket = buckets[bucketName];
 
 
-                for (const benchmarkName of Object.keys(bucket)) {
-                    const { fn, opts: { setup, teardown } } = bucket[benchmarkName];
+            for (const benchmarkName of Object.keys(bucket)) {
+                const { fn, opts: { setup, teardown } } = bucket[benchmarkName];
 
-                    const fastest = { time: -Infinity };
-                    const slowest = { time: +Infinity };
+                const fastest = { time: -Infinity };
+                const slowest = { time: +Infinity };
 
-                    for (const testModule of testModules) {
-                        const name = `${bucketName} ➭ ${benchmarkName} ➭ ${testModule.name}`;
-                        const ctx = await Promise.resolve(setup(testModule.module));
-                        const result = await new Promise((resolve, reject) => {
-                            const bench = new benchmark.Benchmark(name, () => fn(testModule.module, ctx));
+                for (const testModule of testModules) {
+                    const name = `${bucketName} ➭ ${benchmarkName} ➭ ${testModule.name}`;
+                    const ctx = await Promise.resolve(setup(testModule.module));
+                    const result = await new Promise((resolve, reject) => {
+                        const bench = new benchmark.Benchmark(name, () => fn(testModule.module, ctx));
 
-                            bench.on('complete', (event) => {
-                                if (event.target.error) {
-                                    console.log(`- ${event.target.toString()}\n${event.target.error.stack}`);
+                        bench.on('complete', (event) => {
+                            if (event.target.error) {
+                                console.log(`- ${event.target.toString()}\n${event.target.error.stack}`);
 
-                                    reject({
-                                        name,
-                                        bucket: bucketName,
-                                        benchmark: benchmarkName,
-                                        module: testModule.name,
-                                        error: event.target.error,
-                                    });
-                                } else {
-                                    console.log(`- ${event.target.toString()}`);
+                                reject({
+                                    name,
+                                    bucket: bucketName,
+                                    benchmark: benchmarkName,
+                                    module: testModule.name,
+                                    error: event.target.error,
+                                });
+                            } else {
+                                console.log(`- ${event.target.toString()}`);
 
-                                    if (bench.hz > fastest.time) {
-                                        fastest.name = testModule.name;
-                                        fastest.time = bench.hz;
-                                    }
-                                    if (bench.hz < slowest.time) {
-                                        slowest.name = testModule.name;
-                                        slowest.time = bench.hz;
-                                    }
-
-                                    resolve({
-                                        name,
-                                        bucket: bucketName,
-                                        benchmark: benchmarkName,
-                                        module: testModule.name,
-                                        current: testModule.current,
-                                        hz: bench.hz,
-                                        stats: bench.stats,
-                                        times: bench.times,
-                                    });
+                                if (bench.hz > fastest.time) {
+                                    fastest.name = testModule.name;
+                                    fastest.time = bench.hz;
                                 }
-                            });
+                                if (bench.hz < slowest.time) {
+                                    slowest.name = testModule.name;
+                                    slowest.time = bench.hz;
+                                }
 
-                            bench.run();
+                                resolve({
+                                    name,
+                                    bucket: bucketName,
+                                    benchmark: benchmarkName,
+                                    module: testModule.name,
+                                    current: testModule.current,
+                                    hz: bench.hz,
+                                    stats: bench.stats,
+                                    times: bench.times,
+                                });
+                            }
                         });
 
-                        _.set(results, [bucketName, benchmarkName, result.module], result);
+                        bench.run();
+                    });
 
-                        await Promise.resolve(teardown(testModule.module, ctx));
-                    }
+                    _.set(results, [bucketName, benchmarkName, result.module], result);
 
-                    _.set(results, [bucketName, benchmarkName, fastest.name, 'fastest'], true);
-                    _.set(results, [bucketName, benchmarkName, slowest.name, 'slowest'], true);
+                    await Promise.resolve(teardown(testModule.module, ctx));
                 }
+
+                _.set(results, [bucketName, benchmarkName, fastest.name, 'fastest'], true);
+                _.set(results, [bucketName, benchmarkName, slowest.name, 'slowest'], true);
             }
+        }
 
-            reportResults(results);
+        reportResults(results);
 
-            return results;
-        },
+        return results;
+    }
+
+    const getApi = (defaultOpts = {}) => {
+        const api = {
+            add(name, fn, opts = {}) {
+                opts = Object.assign(
+                    {},
+                    {
+                        bucket: 'regression',
+                        setup: () => void 0,
+                        teardown: () => void 0,
+                    },
+                    defaultOpts,
+                    opts,
+                );
+                _.defaults(buckets, { [opts.bucket]: {} });
+
+                const bucket = buckets[opts.bucket];
+
+                if (_.has(bucket, name)) {
+                    throw new Error(`Bucket ${opts.bucket} already has benchmark ${name}.`);
+                }
+
+                bucket[name] = { fn, opts };
+
+                return api;
+            },
+            suite(bucket, setup) {
+                const suiteApi = getApi({bucket});
+                setup(suiteApi);
+                return api;
+            },
+            run
+        };
+
+        return api;
     };
 
-    return api;
+    return getApi()
 }
 
 async function installTestModules(testModules) {
