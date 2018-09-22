@@ -2,7 +2,13 @@
 
 const createRegressionBenchmark = require('..');
 
-const benchmarks = createRegressionBenchmark({name: 'latest', module: 'prom-client'}, ['prom-client@11.1.2', 'prom-client@11.1.1']);
+const benchmarks = createRegressionBenchmark(
+    require('prom-client'),
+    [
+        'prom-client@11.1.2',
+        'prom-client@11.1.1'
+    ]
+);
 
 benchmarks.suite('registry', (suite) => {
     suite.add(

@@ -1,4 +1,4 @@
-# Benchmark Regression
+# Benchmark Regression [![NPM version](https://img.shields.io/npm/v/@clevernature/benchmark-regression.svg?style=flat)](https://www.npmjs.com/package/@clevernature/benchmark-api) [![Linux Build Status](https://img.shields.io/travis/nowells/benchmark-regression.svg?style=flat&label=Travis)](https://travis-ci.org/nowells/benchmark-regression)
 
 Generates performance regression tests using [benchmarkjs](https://benchmarkjs.com/).
 
