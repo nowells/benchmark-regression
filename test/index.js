@@ -5,7 +5,7 @@ const createRegressionBenchmark = require('..');
 const benchmarks = createRegressionBenchmark(
     require('prom-client'),
     [
-        'prom-client@latest',
+        'prom-client@11.1.2',
         'prom-client@11.1.1'
     ]
 );
