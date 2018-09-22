@@ -1,0 +1,5 @@
+/assets/
+/test/
+.eslint*
+.travis.yml
+.babelrc
