@@ -8,7 +8,7 @@ Generates performance regression tests using benchmarkjs.
 const createRegressionBenchmark = require('@clevernature/benchmark-regression');
 const currentClient = require('..');
 
-const benchmarks = createRegressionBenchmark(currentClient, ['prom-client@11.1.2', 'prom-client@11.1.1']);
+const benchmarks = createRegressionBenchmark(currentClient, ['prom-client@11.1.2']);
 
 benchmarks.suite('registry', (suite) => {
     suite.add(
