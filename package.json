@@ -1,6 +1,6 @@
 {
   "name": "@clevernature/benchmark-regression",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generates performance regression tests using benchmarkjs.",
   "main": "dist/index.js",
   "scripts": {

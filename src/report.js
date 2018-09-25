@@ -47,7 +47,7 @@ function reportResults(results) {
 
             const fastest = _.find(benchmark, { fastest: true });
             const slowest = _.find(benchmark, { slowest: true });
-            const percentChange = computePercentChange(fastest, slowest);
+            const percentChange = computePercentChange(slowest, fastest);
             const isFaster = fastest.current;
             const isAcceptable = percentChange.value <= ACCEPTABLE_PERCENTAGE_SLOWER;
             const success = isFaster || isAcceptable;
